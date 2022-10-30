@@ -13,6 +13,7 @@ spec:
     name: flux-system
   url: ssh://git@github.com/polysensus/fluxcd-org
 ---
+# This picks up all yaml files in ./clusters/hoy
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
 kind: Kustomization
 metadata:

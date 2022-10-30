@@ -1,0 +1,29 @@
+# So that the sealing public key is available always
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: sealed-secrets
+  namespace: flux-system
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: PathPrefix(`/_/sealed-secrets/`) && Method(`GET`)
+      kind: Rule
+      services:
+        - kind: Service
+          name: sealed-secrets-controller
+          scheme: http
+          port: http
+      middlewares:
+        - name: sealed-secrets-prefix-strip
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: sealed-secrets-prefix-strip
+  namespace: flux-system
+spec:
+  stripPrefix:
+    prefixes:
+      - /_/sealed-secrets/
