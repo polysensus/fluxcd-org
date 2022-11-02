@@ -1,0 +1,34 @@
+---
+# A source reference that pulls the tenant flux configuration from a seperate
+# repository
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: GitRepository
+metadata:
+  name: fluxcd-hoy-chains
+spec:
+  interval: 30s
+  ref:
+    branch: main
+  url: ssh://git@github.com/polysensus/hoy-chains.git
+  secretRef:
+    name: fluxcd-hoy-chains
+
+---
+# flux kustomization of the git source reference. It specifies the path in
+# which the k8s/kustomize resource is found in the target repository. Note the
+# kind is the same as the k8s Kustomization but its not the same thing at all.
+# flux/Kustomization's apply flux specific behaviour to flux specific resources
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: fluxcd-hoy-chains
+spec:
+  interval: 30s
+  path: ./
+  prune: true
+  # Allow the hoy-chains repository to create namespaces by running with
+  # cluster wide access. Any project that creates namespaces needs this power.
+  #serviceAccountName: hoy-chains
+  sourceRef:
+    kind: GitRepository
+    name: fluxcd-hoy-chains
