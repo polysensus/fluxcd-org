@@ -1,0 +1,101 @@
+interpreter: bash -c
+name: fluxcd-org
+usage: |
+  commands for the fluxcd-org polysensus fleet cd repo
+
+options:
+  launchdir:
+    usage: >
+      Don't set this option. Its a work around for a go-tusk peculiarity
+    environment: PWD
+  cert:
+    default: https://hoy.polysensus.io/_/sealed-secrets/v1/cert.pem
+  certcmd:
+    default: "curl -kso sealed-secrets.pem https://hoy.polysensus.io/_/sealed-secrets/v1/cert.pem"
+  quiet:
+    type: bool
+    short: q
+  githost:
+    default: github.com
+  nodel:
+    usage: "by default the local disc copy of the plaintext secret resource is deleted"
+    type: bool
+    default: false
+    short: D
+
+  reseal:
+    usage: "skip generation and reseal. assumes --nodel was previousl used"
+    type: bool
+    default: false
+    short: R
+
+  force:
+    default: false
+    type: bool
+    short: f
+
+  name:
+    default: default
+  namespace:
+    default: default
+
+tasks:
+
+  git-deploykey:
+    usage: |
+      generate a new sealed secret for an ssh key secret
+      suitable for use as a tenant repository git deploy key
+    args:
+      dir:
+        usage: "the directory to put generated files in"
+
+    run:
+      - command:
+          exec: |
+            set -e
+            export SEALED_SECRETS_CONTROLLER_NAMESPACE=flux-system
+
+            DIR=$(cd ${launchdir} && cd ${dir} && pwd)
+            [ ! -d $DIR ] && echo "$DIR doesn't exist" && exit 1
+
+            pushd $DIR > /dev/null
+
+            ${force} && rm -f kustomization.yaml
+            [ -f kustomization.yaml ] && echo "kustomization.yaml exists in $DIR. Use -f if you mean to overwrite" && exit 1
+
+            if ! ${reseal}; then
+              rm -f ./identity
+              rm -f ./known_hosts
+              ssh-keygen -q -N "" -t ecdsa -f ./identity > /dev/null
+              ssh-keyscan ${githost} > ./known_hosts
+            fi
+
+            cat <<EOF > kustomization.yaml
+            generatorOptions:
+              disableNameSuffixHash: true
+            namespace: ${namespace}
+            secretGenerator:
+              - name: ${name}
+                files:
+                  - identity
+                  - identity.pub
+                  - known_hosts
+            EOF
+            [ -f kustomization.yaml ] && ! ${quiet} echo "Wrote: $(pwd)/kustomization.yaml"
+
+            kustomize build . > secret-${name}.yaml
+            [ -f secret-${name}.yaml ] && ! ${quiet} echo "Wrote: $(pwd)/secret-${name}.yaml"
+
+            curl -kso sealed-secrets.pem ${cert}
+            kubeseal --cert sealed-secrets.pem < secret-${name}.yaml  > secret-${name}sealed.yaml
+            [ -f secret-${name}sealed.yaml ] && ! ${quiet} && echo "Wrote $(pwd)/secret-${name}sealed.yaml"
+
+            cat secret-${name}.yaml | yq e '.data["known_hosts"]' - | base64 -d
+            cat secret-${name}.yaml | yq e '.data["identity.pub"]' - | base64 -d
+
+            rm -rf sealed-secrets.pem
+
+            ! ${nodel} && rm secret-${name}.yaml && ! ${quiet} && echo "Deleted: secret-${name}.yaml"
+            ! ${nodel} && rm kustomization.yaml && ! ${quiet} && echo "Deleted: kustomization.yaml"
+
+            popd > /dev/null

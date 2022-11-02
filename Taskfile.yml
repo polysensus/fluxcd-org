@@ -1,0 +1,25 @@
+---
+version: '3'
+
+tasks:
+  hoy-chains-seal-ssh:
+    desc: create and seal the ssh deploy key for the hoy-chains tenant repository
+    cmds:
+      - |
+        set -e
+        tusk -qf tusk.yml \
+          git-deploykey \
+          --namespace flux-system \
+          --name fluxcd-hoy-chains \
+          tenants/hoy-chains/tmp
+        mv tenants/hoy-chains/tmp/secret-fluxcd-hoy-chainssealed.yaml tenants/hoy-chains/
+        cat tenants/hoy-chains/tmp/identity.pub
+        grep "  - secret-fluxcd-hoy-chainssealed.yaml" tenants/hoy-chains/kustomization.yaml && exit 0
+        echo "  - secret-fluxcd-hoy-chainssealed.yaml" >> tenants/hoy-chains/kustomization.yaml
+        echo "Added secret-fluxcd-hoy-chainssealed.yaml to tenants/hoy-chains/kustomization.yaml"
+
+  update-secrets:
+    desc: update all the sealed secrets
+    cmds:
+      - task: hoy-chains-seal-ssh
+
