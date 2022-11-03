@@ -2,6 +2,7 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
 kind: Kustomization
 metadata:
   name: hoy-chains
+  # XXX: TODO rename as tenant-hoy-chains
   namespace: flux-system
 spec:
   interval: 20s

@@ -4,6 +4,7 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: GitRepository
 metadata:
+  # TODO: rename as project-hoy-chains
   name: fluxcd-hoy-chains
   namespace: flux-system
 spec:
@@ -26,7 +27,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 30s
-  path: ./
+  path: ./fluxcd
   prune: true
   # Allow the hoy-chains repository to create namespaces by running with
   # cluster wide access. Any project that creates namespaces needs this power.
