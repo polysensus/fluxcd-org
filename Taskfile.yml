@@ -7,16 +7,18 @@ tasks:
     cmds:
       - |
         set -e
+        NAME=hoy-chains
         tusk -qf tusk.yml \
           git-deploykey \
           --namespace flux-system \
-          --name fluxcd-hoy-chains \
+          --name $NAME \
           tenants/hoy-chains/tmp
-        mv tenants/hoy-chains/tmp/secret-fluxcd-hoy-chainssealed.yaml tenants/hoy-chains/
-        cat tenants/hoy-chains/tmp/identity.pub
-        grep "  - secret-fluxcd-hoy-chainssealed.yaml" tenants/hoy-chains/kustomization.yaml && exit 0
-        echo "  - secret-fluxcd-hoy-chainssealed.yaml" >> tenants/hoy-chains/kustomization.yaml
-        echo "Added secret-fluxcd-hoy-chainssealed.yaml to tenants/hoy-chains/kustomization.yaml"
+        mv tenants/$NAME/tmp/secret-${NAME}sealed.yaml tenants/$NAME/
+        cat tenants/$NAME/tmp/identity.pub
+        echo "NOW GO UPDATE THE DEPLOY KEY for polysensus/$NAME to the above public key"
+        grep "  - secret-${NAME}sealed.yaml" tenants/$NAME/kustomization.yaml && exit 0
+        echo "  - secret-${NAME}sealed.yaml" >> tenants/$NAME/kustomization.yaml
+        echo "Added secret-${NAME}sealed.yaml to tenants/$NAME/kustomization.yaml"
 
   update-secrets:
     desc: update all the sealed secrets

@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
   - sync.yaml
   - secret-fluxcd-hoy-chainssealed.yaml
+  - secret-hoy-chainssealed.yaml
