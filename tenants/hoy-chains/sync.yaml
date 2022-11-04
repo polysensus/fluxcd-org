@@ -4,7 +4,6 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: GitRepository
 metadata:
-  # TODO: rename as project-hoy-chains
   name: hoy-chains
   namespace: flux-system
 spec:
@@ -13,7 +12,7 @@ spec:
     branch: main
   url: ssh://git@github.com/polysensus/hoy-chains.git
   secretRef:
-    name: fluxcd-hoy-chains
+    name: oy-chains
 
 ---
 # flux kustomization of the git source reference. It specifies the path in
