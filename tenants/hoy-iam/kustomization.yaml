@@ -3,3 +3,5 @@ kind: Kustomization
 resources:
   - sync.yaml
   - secret-hoy-iamsealed.yaml
+spec:
+  targetNamespace: hoy-iam-dev
