@@ -1,8 +1,13 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+namespace: hoy-iam-dev
 resources:
   - sync.yaml
   - secret-hoy-iamsealed.yaml
   - namespace.yaml
+# we could put this directly in the sync.yaml, but in general, for
+# dev/test/prod like support we would be patching it in
+patchesStrategicMerge:
+  - patch-targetnamespace-hoy-iam-dev.yaml
 spec:
   targetNamespace: hoy-iam-dev
