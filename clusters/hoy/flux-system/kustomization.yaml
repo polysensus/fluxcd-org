@@ -3,3 +3,25 @@ kind: Kustomization
 resources:
 - gotk-components.yaml
 - gotk-sync.yaml
+patches:
+  - target:
+      version: v1
+      group: apps
+      kind: Deployment
+      name: image-reflector-controller
+      namespace: flux-system
+    patch: |-
+      - op: add
+        path: /spec/template/spec/containers/0/args/-
+        value: --gcp-autologin-for-gcr
+patchesStrategicMerge:
+  - |-
+    # GCP Workload Identity binding. the GCP principal and IAM roles are
+    # handles by the cluster tf
+    apiVersion: v1
+    kind: ServiceAccount
+    metadata:
+      name: image-reflector-controller
+      namespace: flux-system
+      annotations:
+        iam.gke.io/gcp-service-account: fluxcd-sa@hoy-dev-1.iam.gserviceaccount.com
