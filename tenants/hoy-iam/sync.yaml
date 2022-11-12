@@ -25,6 +25,7 @@ metadata:
   name: hoy-iam
   namespace: flux-system
 spec:
+  targetNamespace: hoy-iam-dev
   interval: 30s
   path: ./fluxcd
   prune: true

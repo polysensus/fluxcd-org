@@ -37,7 +37,7 @@ options:
   name:
     default: default
   namespace:
-    default: default
+    default: flux-system
 
 tasks:
 
