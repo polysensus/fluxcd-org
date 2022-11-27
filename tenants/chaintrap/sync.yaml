@@ -37,7 +37,7 @@ spec:
   path: ./dev
   prune: true
   # DONT allow the repository to create namespaces by running an explicit serviceAccount
-  serviceAccountName: fluxcd-chaintrap
+  serviceAccountName: chaintrap
   sourceRef:
     kind: GitRepository
     name: fluxcd-chaintrap
