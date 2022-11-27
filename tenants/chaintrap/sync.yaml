@@ -36,8 +36,10 @@ spec:
   interval: 30s
   path: ./dev
   prune: true
-  # DONT allow the repository to create namespaces by running an explicit serviceAccount
+  # DONT allow the repository to create resources in any namespace outside the
+  # target by running an explicit serviceAccount
   serviceAccountName: chaintrap
+  targetNamespace: chaintrap
   sourceRef:
     kind: GitRepository
     name: fluxcd-chaintrap
