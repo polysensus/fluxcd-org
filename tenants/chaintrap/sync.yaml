@@ -34,7 +34,7 @@ metadata:
   name: fluxcd-chaintrap
 spec:
   interval: 30s
-  path: ./
+  path: ./dev
   prune: true
   # DONT allow the repository to create namespaces by running an explicit serviceAccount
   serviceAccountName: fluxcd-chaintrap
