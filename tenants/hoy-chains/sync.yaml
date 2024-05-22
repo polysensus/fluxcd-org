@@ -1,7 +1,7 @@
 ---
 # A source reference that pulls the tenant flux configuration from a seperate
 # repository
-apiVersion: source.toolkit.fluxcd.io/v1beta1
+apiVersion: source.toolkit.fluxcd.io/v1
 kind: GitRepository
 metadata:
   name: hoy-chains
@@ -19,7 +19,7 @@ spec:
 # which the k8s/kustomize resource is found in the target repository. Note the
 # kind is the same as the k8s Kustomization but its not the same thing at all.
 # flux/Kustomization's apply flux specific behaviour to flux specific resources
-apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: hoy-chains
