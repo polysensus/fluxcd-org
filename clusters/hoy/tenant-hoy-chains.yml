@@ -8,5 +8,6 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
+  serviceAccountName: kustomize-controller
   path: ./tenants/hoy-chains
   prune: true

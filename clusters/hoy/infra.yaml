@@ -8,5 +8,6 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
+  serviceAccountName: kustomize-controller
   path: ./clusters/hoy/sealed-secrets
   prune: true
