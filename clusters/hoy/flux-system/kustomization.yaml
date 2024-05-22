@@ -4,16 +4,46 @@ resources:
 - gotk-components.yaml
 - gotk-sync.yaml
 patches:
-  - target:
-      version: v1
-      group: apps
+  - patch: |
+      - op: add
+        path: /spec/template/spec/containers/0/args/-
+        value: --no-cross-namespace-refs=true
+    target:
       kind: Deployment
-      name: image-reflector-controller
-      namespace: flux-system
-    patch: |-
+      name: "(kustomize-controller|helm-controller|notification-controller|image-reflector-controller|image-automation-controller)"
+  - patch: |
+      - op: add
+        path: /spec/template/spec/containers/0/args/-
+        value: --no-remote-bases=true
+    target:
+      kind: Deployment
+      name: "kustomize-controller"
+  - patch: |
+      - op: add
+        path: /spec/template/spec/containers/0/args/-
+        value: --default-service-account=default
+    target:
+      kind: Deployment
+      name: "(kustomize-controller|helm-controller)"
+  - patch: |
+      - op: add
+        path: /spec/serviceAccountName
+        value: kustomize-controller
+    target:
+      kind: Kustomization
+      name: "flux-system"
+  - patch: |-
       - op: add
         path: /spec/template/spec/containers/0/args/-
         value: --gcp-autologin-for-gcr
+    target:
+      #group: apps
+      #name: image-reflector-controller
+      #version: v1
+      #namespace: flux-system
+      kind: Deployment
+      name: "(kustomize-controller|helm-controller|notification-controller|image-reflector-controller|image-automation-controller)"
+
 patchesStrategicMerge:
   - |-
     # GCP Workload Identity binding. the GCP principal and IAM roles are
