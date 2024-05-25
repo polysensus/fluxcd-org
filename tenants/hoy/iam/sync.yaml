@@ -24,7 +24,7 @@ metadata:
   name: hoy-iam
 spec:
   targetNamespace: hoy-iam-dev
-  serviceAccountName: kustomize-controller
+  serviceAccountName: sealed-secrets-controller
   interval: 30s
   path: ./fluxcd
   prune: true
