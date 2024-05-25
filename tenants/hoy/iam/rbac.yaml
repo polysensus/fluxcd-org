@@ -1,0 +1,35 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    toolkit.fluxcd.io/tenant: iam
+  name: hoy-iam-dev
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    toolkit.fluxcd.io/tenant: iam
+  name: iam
+  namespace: hoy-iam-dev
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    toolkit.fluxcd.io/tenant: iam
+  name: gotk-reconciler
+  namespace: hoy-iam-dev
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: User
+  name: gotk:hoy-iam-dev:reconciler
+- kind: ServiceAccount
+  name: iam
+  namespace: hoy-iam-dev
