@@ -4,8 +4,8 @@ kind: Namespace
 metadata:
   labels:
     toolkit.fluxcd.io/tenant: iam
+    #toolkit.fluxcd.io/tenant: hoy-iam-dev
   name: hoy-iam-dev
-
 ---
 apiVersion: v1
 kind: ServiceAccount

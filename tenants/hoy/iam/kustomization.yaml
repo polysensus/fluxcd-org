@@ -5,7 +5,6 @@ resources:
   - rbac.yaml
   - sync.yaml
   - secret-hoy-iamsealed.yaml
-  - namespace.yaml
 # we could put this directly in the sync.yaml, but in general, for
 # dev/test/prod like support we would be patching it in
 #patchesStrategicMerge:
