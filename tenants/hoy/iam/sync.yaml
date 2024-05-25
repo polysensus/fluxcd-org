@@ -9,7 +9,8 @@ spec:
   interval: 30s
   ref:
     branch: main
-  url: ssh://git@github.com/polysensus/hoy-iam.git
+  #url: ssh://git@github.com/polysensus/hoy-iam.git
+  url: https://github.com/polysensus/hoy-iam.git
   secretRef:
     name: hoy-iam
 
