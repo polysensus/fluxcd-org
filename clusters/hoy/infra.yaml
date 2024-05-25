@@ -11,3 +11,5 @@ spec:
   serviceAccountName: kustomize-controller
   path: ./clusters/hoy/sealed-secrets
   prune: true
+  wait: true
+  timeout: 10m

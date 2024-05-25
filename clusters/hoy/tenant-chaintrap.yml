@@ -4,7 +4,9 @@ metadata:
   name: tenant-chaintrap
   namespace: flux-system
 spec:
-  interval: 20s
+  dependsOn:
+    - name: sealed-secrets
+  interval: 5m
   sourceRef:
     kind: GitRepository
     name: flux-system

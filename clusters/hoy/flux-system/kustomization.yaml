@@ -1,8 +1,8 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-- gotk-components.yaml
-- gotk-sync.yaml
+  - gotk-components.yaml
+  - gotk-sync.yaml
 patches:
   - patch: |
       - op: add
@@ -42,16 +42,17 @@ patches:
       #version: v1
       #namespace: flux-system
       kind: Deployment
-      name: "(kustomize-controller|helm-controller|notification-controller|image-reflector-controller|image-automation-controller)"
+      name: "image-reflector-controller"
 
-patchesStrategicMerge:
-  - |-
-    # GCP Workload Identity binding. the GCP principal and IAM roles are
-    # handles by the cluster tf
-    apiVersion: v1
-    kind: ServiceAccount
-    metadata:
-      name: image-reflector-controller
-      namespace: flux-system
-      annotations:
-        iam.gke.io/gcp-service-account: fluxcd-sa@hoy-dev-1.iam.gserviceaccount.com
+#patchesStrategicMerge:
+#  - |-
+#    # GCP Workload Identity binding. the GCP principal and IAM roles are
+#    # handles by the cluster tf
+#    apiVersion: v1
+#    kind: ServiceAccount
+#    metadata:
+#      name: image-reflector-controller
+#      namespace: flux-system
+#      annotations:
+#        iam.gke.io/gcp-service-account: fluxcd-sa@hoy-dev-1.iam.gserviceaccount.com
+#
