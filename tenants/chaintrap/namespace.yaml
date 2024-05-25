@@ -1,8 +1,0 @@
-# The Namespaces for the cluster are controled in this cluster wide repository.
-# These definitions need to align with the terraform controled GCP principals.
-apiVersion: v1
-kind: Namespace
-metadata:
-  labels:
-    toolkit.fluxcd.io/tenant: chaintrap
-  name: chaintrap

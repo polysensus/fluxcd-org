@@ -1,52 +1,46 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - gotk-components.yaml
-  - gotk-sync.yaml
+- gotk-components.yaml
+- gotk-sync.yaml
 
 patches:
-  - patch: |
-      - op: add
-        path: /spec/template/spec/containers/0/args/-
-        value: --no-cross-namespace-refs=true
-    target:
-      kind: Deployment
-      name: "(kustomize-controller|helm-controller|notification-controller|image-reflector-controller|image-automation-controller)"
-  - patch: |
-      - op: add
-        path: /spec/template/spec/containers/0/args/-
-        value: --no-remote-bases=true
-    target:
-      kind: Deployment
-      name: "kustomize-controller"
-  - patch: |
-      - op: add
-        path: /spec/template/spec/containers/0/args/-
-        value: --default-service-account=default
-    target:
-      kind: Deployment
-      name: "(kustomize-controller|helm-controller)"
-  - patch: |
-      - op: add
-        path: /spec/serviceAccountName
-        value: kustomize-controller
-    target:
-      kind: Kustomization
-      name: "flux-system"
-  - patch: |-
-      - op: add
-        path: /spec/template/spec/containers/0/args/-
-        value: --gcp-autologin-for-gcr
-    target:
-      #group: apps
-      #name: image-reflector-controller
-      #version: v1
-      #namespace: flux-system
-      kind: Deployment
-      name: "image-reflector-controller"
-
-patchesStrategicMerge:
-  - |-
+- patch: |
+    - op: add
+      path: /spec/template/spec/containers/0/args/-
+      value: --no-cross-namespace-refs=true
+  target:
+    kind: Deployment
+    name: (kustomize-controller|helm-controller|notification-controller|image-reflector-controller|image-automation-controller)
+- patch: |
+    - op: add
+      path: /spec/template/spec/containers/0/args/-
+      value: --no-remote-bases=true
+  target:
+    kind: Deployment
+    name: kustomize-controller
+- patch: |
+    - op: add
+      path: /spec/template/spec/containers/0/args/-
+      value: --default-service-account=default
+  target:
+    kind: Deployment
+    name: (kustomize-controller|helm-controller)
+- patch: |
+    - op: add
+      path: /spec/serviceAccountName
+      value: kustomize-controller
+  target:
+    kind: Kustomization
+    name: flux-system
+- patch: |-
+    - op: add
+      path: /spec/template/spec/containers/0/args/-
+      value: --gcp-autologin-for-gcr
+  target:
+    kind: Deployment
+    name: image-reflector-controller
+- patch: |-
     # GCP Workload Identity binding. the GCP principal and IAM roles are
     # handles by the cluster tf
     apiVersion: v1
@@ -57,3 +51,5 @@ patchesStrategicMerge:
       annotations:
         iam.gke.io/gcp-service-account: fluxcd-sa@hoy-dev-1.iam.gserviceaccount.com
 
+    # GCP Workload Identity binding. the GCP principal and IAM roles are
+    # handles by the cluster tf
