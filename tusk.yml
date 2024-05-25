@@ -124,7 +124,7 @@ tasks:
     run:
       - command:
           exec: |
-            set -e
+            set -ex
 
             for name in $(kubectl -n ${namespace} get gitrepositories -o name); do
               echo $name
